@@ -1,12 +1,8 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn
-} from 'typeorm';
+// src/entities/User.ts
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Task } from './Task';
 
-@Entity('users') // Maps to 'users' table in MySQL
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -17,11 +13,16 @@ export class User {
   @Column({ type: 'varchar', unique: true, length: 100 })
   email!: string;
 
-  @Column({ type: 'varchar', length: 255, select: false }) // Don't return password by default
+  @Column({ type: 'varchar', length: 255, select: false })
   password!: string;
 
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
+  @Column({ type: 'varchar', length: 20, nullable: true })
+ phoneNumber!: string | null;
+ 
+  @OneToMany(() => Task, task => task.user)
+  tasks!: Task[];
 
   @CreateDateColumn()
   createdAt!: Date;
